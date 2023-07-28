@@ -35,8 +35,9 @@ def banners(request):
             'freeDelivery': p.freeDelivery,
         })
         images_list = []
-        for img in p.image.url:
-            images_list.append({'src': img})
+        # for img in p.image.url:
+        #     images_list.append({'src': img})
+        images_list.append({'src': p.images.url})
         data[i]['images'] = images_list
         # data[i]['images'] = p.image.all()
         tags_list = []
@@ -171,15 +172,15 @@ def catalog(request):
 
 def productsPopular(request):
     data = []
-    pr = Products.objects.order_by('-rating')[:3]
-    prof = Profile.objects.all()
+    # pr = Products.objects.order_by('-rating')[:3]
+    pr = Profile.objects.all()
     # popular_products = Products.objects.annotate(avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:8]
 
     i = 0
     for p in pr:
         data.append({
             'id': p.id,
-            'category': p.category.id,
+            'category': p.category,
             'price': p.price,
             'count': p.count,
             'title': p.title,
@@ -188,8 +189,9 @@ def productsPopular(request):
             'freeDelivery': p.freeDelivery,
         })
         images_list = []
-        for img in p.images.name:
-            images_list.append({'src': img.url})
+        # for img in p.images.name:
+        #     images_list.append({'src': img.url})
+        images_list.append({'src': p.images.url})
         data[i]['images'] = images_list
         tags_list = []
         for tag in p.tags.all():
@@ -202,14 +204,15 @@ def productsPopular(request):
 
 def productsLimited(request):
     data = []
-    popular_products = Products.objects.filter(available=True, count__lt=10).annotate(
-        avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:3]
+    # popular_products = Products.objects.filter(available=True, count__lt=10).annotate(
+    #     avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:3]
+    prod = Products.objects.all()
 
     i = 0
-    for p in popular_products:
+    for p in prod:
         data.append({
             'id': p.id,
-            'category': p.category.id,
+            'category': p.category,
             'price': p.price,
             'count': p.count,
             'title': p.title,
@@ -218,8 +221,9 @@ def productsLimited(request):
             'freeDelivery': p.freeDelivery,
         })
         images_list = []
-        for img in p.image.all():
-            images_list.append({'src': img.image.url})
+        # for img in p.images.name:
+        #     images_list.append({'src': img})
+        images_list.append({'src': p.image.url})
         data[i]['images'] = images_list
         tags_list = []
         for tag in p.tags.all():
@@ -231,47 +235,27 @@ def productsLimited(request):
 
 def sales(request):
     data = []
-    images_list = []
-    midl_list = []
-    # pprod = Products.objects.all()
-    # prodimage = Products.objects.filter(pk=1).get("images")
-    # prodimage = Products.objects.get("images").id
-    popular_products = Products.objects.filter(available=True, count__lt=10).annotate(
-         avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:3]
+    products = Products.objects.all()
 
-    data = {
-        "items": [
-
-        ]
-    }
     i = 0
-    for p in popular_products:
-        data['items'].append({
+    for p in products:
+        data.append({
             'id': p.id,
-            "price": p.price,
-            "salePrice": p.price,
-            "dateFrom": p.date.strftime('%Y-%m-%d %H:%M'),
-            "dateTo": p.date.strftime('%Y-%m-%d %H:%M'),
-            "title": p.title,
+            'price': p.price,
+            'salePrice': str(int(p.price * 0.1)),
+            'dateFrom': p.date,
+            'dateTo': p.date,
+            'title': p.title,
         })
-        data['currentPage'] = i+1
-        data['lastPage'] = 3
-        # items = [{
-        #     'id': p.get(id=i),
-        #     "price": p.price,
-        #     "salePrice": p.price,
-        #     "dateFrom": p.date.strftime('%Y-%m-%d %H:%M'),
-        #     "dateTo": p.date.strftime('%Y-%m-%d %H:%M'),
-        #     "title": p.title,
-        #     'currentPage': randrange(1, 4),
-        #     'lastPage': 3}]
-        #
-        # data['items'][i]['images'] = images_list
-        for img in p.images.all():
-            images_list.append({'src': img.image.url})
-        data[i]['salesCards'] = images_list
-        # data[i]['images'] = p.image
         images_list = []
+        # for img in p.image.all():
+        #     images_list.append({'src': img.image.url})
+        images_list.append({'src': p.image.url})
+        data[i]['images'] = images_list
+        tags_list = []
+        for tag in p.tags.all():
+            tags_list.append({'id': tag.id, 'name': tag.name})
+        data[i]['tags'] = tags_list
         i += 1
     return JsonResponse(data, safe=False)
 
