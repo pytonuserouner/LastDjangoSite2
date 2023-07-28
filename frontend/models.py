@@ -32,7 +32,7 @@ class Tags(models.Model):
 
 class Products(models.Model):
     title = models.CharField(max_length=100, null=True, blank=True, verbose_name='Название товара')
-    images = models.ImageField(default="images/bigGoods.png", upload_to=f'media/images/', null=True, blank=True,
+    images = models.ImageField(upload_to=f'media/images/', null=True, blank=True,
                               verbose_name='Изображение товара')
     # images = models.ManyToManyField(Images, verbose_name='Изображение товара')
     description = models.CharField(max_length=200, verbose_name='Описание товара')
@@ -54,11 +54,11 @@ class Reviews(models.Model):
     email = models.CharField(max_length=255, default='')
     rating = models.IntegerField(default=0)
     product = models.ForeignKey(Products, on_delete=models.CASCADE, default='1')
-    name = models.CharField(max_length=255,default='')
+    text = models.CharField(max_length=255,default='')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.text
 
 
 class Profile(models.Model):

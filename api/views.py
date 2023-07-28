@@ -35,10 +35,10 @@ def banners(request):
             'freeDelivery': p.freeDelivery,
         })
         images_list = []
-        # for img in p.image:
-        #     images_list.append({'src': img.image.url})
-        # data[i]['images'] = images_list
-        data[i]['images'] = p.image
+        for img in p.image.url:
+            images_list.append({'src': img})
+        data[i]['images'] = images_list
+        # data[i]['images'] = p.image.all()
         tags_list = []
         for tag in p.tags.all():
             tags_list.append({'id': tag.id, 'name': tag.name})
@@ -81,9 +81,12 @@ class CatalogViewSet(ModelViewSet):
 
 
 def catalog(request):
-    prof = Profile.objects.all()
+    # rt = []
+    # for prods in Products.objects.filter("images").all():
+    #     rt.append(prods)
+    # prof = Profile.objects.all()
     if request.method == 'GET':
-        count_page = 9
+        count_page = 1
         name = request.GET.get('filter[name]')
         minPrice = request.GET.get('filter[minPrice]')
         maxPrice = request.GET.get('filter[maxPrice]')
@@ -151,9 +154,9 @@ def catalog(request):
                 'freeDelivery': p.freeDelivery,
             })
             images_list = []
-            for img in Products.images:
-                images_list.append({'src': img.image.url})
-            data['items'][i]['images'] = [p.images]
+            for img in p.images.name:
+                images_list.append({'src': img})
+            data['items'][i]['images'] = images_list
             tags_list = []
             for tag in p.tags.all():
                 tags_list.append({'id': tag.id, 'name': tag.name})
@@ -184,8 +187,8 @@ def productsPopular(request):
             'freeDelivery': p.freeDelivery,
         })
         images_list = []
-        for img in p.images.id:
-            images_list.append({'src': img.image.url})
+        for img in p.images.name:
+            images_list.append({'src': img.url})
         data[i]['images'] = images_list
         tags_list = []
         for tag in p.tags.all():
@@ -229,9 +232,11 @@ def sales(request):
     data = []
     images_list = []
     midl_list = []
-    pprod = Products.objects.all()
-    # popular_products = Products.objects.filter(available=True, count__lt=10).annotate(
-    #     avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:3]
+    # pprod = Products.objects.all()
+    # prodimage = Products.objects.filter(pk=1).get("images")
+    # prodimage = Products.objects.get("images").id
+    popular_products = Products.objects.filter(available=True, count__lt=10).annotate(
+         avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:3]
 
     data = {
         "items": [
@@ -239,7 +244,7 @@ def sales(request):
         ]
     }
     i = 0
-    for p in pprod:
+    for p in popular_products:
         data['items'].append({
             'id': p.id,
             "price": p.price,
@@ -248,7 +253,7 @@ def sales(request):
             "dateTo": p.date.strftime('%Y-%m-%d %H:%M'),
             "title": p.title,
         })
-        data['currentPage'] = i
+        data['currentPage'] = i+1
         data['lastPage'] = 3
         # items = [{
         #     'id': p.get(id=i),
@@ -261,9 +266,9 @@ def sales(request):
         #     'lastPage': 3}]
         #
         # data['items'][i]['images'] = images_list
-        for img in p.images:
+        for img in p.images.all():
             images_list.append({'src': img.image.url})
-        data[i]['images'] = images_list
+        data[i]['salesCards'] = images_list
         # data[i]['images'] = p.image
         images_list = []
         i += 1
@@ -454,7 +459,7 @@ def product(request, id):
         data['freeDelivery'] = p.freeDelivery
         images_list = []
         for img in p.image.all():
-            images_list.append({'src': img.image.url})
+            images_list.append({'src': img})
 
         data['images'] = images_list
         tags_list = []
@@ -496,12 +501,12 @@ def productReviews(request, id):
     rev.email = body['email']
     rev.name = body['text']
     rev.rating = body['rate']
-    rev.product = Products.objects.get(id=id)
+    rev.product = Products.objects.get(id="pk")
     rev.save()
     data = [
 
     ]
-    revs = Reviews.objects.filter(product=Products.objects.get(id=id))
+    revs = Reviews.objects.filter(product=Products.objects.get(id="pk"))
     for res in revs:
         print(res.author)
         data.append({

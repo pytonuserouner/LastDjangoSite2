@@ -28,17 +28,17 @@ var mix = {
         },
         submitReview () {
             this.postData(`/api/product/${this.product.id}/reviews`, {
-                author: this.review.author,
-                email: this.review.email,
-                text: this.review.text,
-                rate: this.review.rate
+                author: this.reviews.author,
+                email: this.reviews.email,
+                text: this.reviews.text,
+                rate: this.reviews.rate
             }).then(({data}) => {
                 this.product.reviews = data
                 alert('Отзыв опубликован')
-                this.review.author = ''
-                this.review.email = ''
-                this.review.text = ''
-                this.review.rate = 5
+                this.reviews.author = ''
+                this.reviews.email = ''
+                this.reviews.text = ''
+                this.reviews.rate = 5
             }).catch(() => {
                 console.warn('Ошибка при публикации отзыва')
             })

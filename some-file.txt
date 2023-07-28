@@ -15,3 +15,19 @@ python manage.py dumpdata app_news.NewsType --format json -o news_types.json
 python manage.py loaddata news_types.json - восстановить сохраненые ранее данные
 python manage.py test shopapp.tests - тестирование приложений (тестами в shopapp.tests)
 pip install drf-spectacular - для документирования API (аналог drf-yasg)
+
+
+…or create a new repository on the command line
+
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/pytonuserouner/LastDjangoSite2.git
+git push -u origin main
+
+
+…or push an existing repository from the command line
+git remote add origin https://github.com/pytonuserouner/LastDjangoSite2.git
+git branch -M main
+git push -u origin main
