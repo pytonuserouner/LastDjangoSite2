@@ -154,8 +154,9 @@ def catalog(request):
                 'freeDelivery': p.freeDelivery,
             })
             images_list = []
-            for img in p.images.name:
-                images_list.append({'src': img})
+            # for img in p.images.url:
+            #     images_list.append({'src': img})
+            images_list.append({'src': p.images.url})
             data['items'][i]['images'] = images_list
             tags_list = []
             for tag in p.tags.all():
@@ -457,10 +458,11 @@ def product(request, id):
         data['date'] = p.date
         data['description'] = p.description
         data['freeDelivery'] = p.freeDelivery
-        images_list = []
-        for img in p.image.all():
-            images_list.append({'src': img})
 
+        images_list = []
+        # for img in p.images.url:
+        #     images_list.append({'src': img})
+        images_list.append({'src': p.images.url})
         data['images'] = images_list
         tags_list = []
         for tag in p.tags.all():
@@ -473,7 +475,7 @@ def product(request, id):
             rev_list.append({
                 'author': rev.author,
                 'email': rev.email,
-                'text': rev.name,
+                'text': rev.text,
                 'rate': rev.rating,
                 'date': rev.date.strftime('%Y-%m-%d %H:%M')
             })
@@ -501,12 +503,12 @@ def productReviews(request, id):
     rev.email = body['email']
     rev.name = body['text']
     rev.rating = body['rate']
-    rev.product = Products.objects.get(id="pk")
+    rev.product = Products.objects.get(id=id)
     rev.save()
     data = [
 
     ]
-    revs = Reviews.objects.filter(product=Products.objects.get(id="pk"))
+    revs = Reviews.objects.filter(product=Products.objects.get(id=id))
     for res in revs:
         print(res.author)
         data.append({

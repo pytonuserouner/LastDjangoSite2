@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "frontend",
     "api",
-    # "api",
 
 ]
 

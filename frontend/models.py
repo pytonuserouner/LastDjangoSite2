@@ -45,8 +45,8 @@ class Products(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.images.url
 
 class Reviews(models.Model):
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank = True, null = True)
